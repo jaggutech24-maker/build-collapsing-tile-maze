@@ -151,10 +151,10 @@ function makeLevel(lv: number) {
 type Status = "play" | "dead" | "won";
 
 const INITIAL_STAGES: StageNode[] = [
-  { id: 1, type: "story", title: "旅立ち", subTitle: "Departure", status: "complete" },
-  { id: 2, type: "battle", title: "ナゾ × ノ × ショウジョ", subTitle: "Mystery Girl", status: "active", isNew: true },
-  { id: 3, type: "trial", title: "ハンター試験", subTitle: "Hunter Exam", status: "locked" },
-  { id: 4, type: "boss", title: "幻影旅団", subTitle: "Phantom Troupe", status: "locked" },
+  { id: 1, type: "story", title: "DEPARTURE", subTitle: "The Journey Begins", status: "complete" },
+  { id: 2, type: "battle", title: "MYSTERY GIRL", subTitle: "Riddle of the Maze", status: "active", isNew: true },
+  { id: 3, type: "trial", title: "HUNTER EXAM", subTitle: "Trick Tower Trial", status: "locked" },
+  { id: 4, type: "boss", title: "PHANTOM TROUPE", subTitle: "The Final Gauntlet", status: "locked" },
 ];
 
 export default function App() {
@@ -352,7 +352,7 @@ export default function App() {
         {/* 1. TOP HEADER */}
         <AnimeHeader
           chapterNumber={activeStageId < 10 ? `0${activeStageId}` : `${activeStageId}`}
-          chapterTitle={activeStageId === 2 ? "ナゾ × ノ × ショウジョ" : activeStageId === 1 ? "旅立ち × ノ × 始まり" : "試練 × ノ × 迷宮"}
+          chapterTitle={activeStageId === 2 ? "RIDDLE × OF × THE MAZE" : activeStageId === 1 ? "DEPARTURE × INTO × LABYRINTH" : "TRIAL × OF × THE HUNTER"}
           gems={gems}
           muted={mute}
           onToggleMute={toggleMute}
@@ -382,12 +382,12 @@ export default function App() {
               onToggleAudio={toggleMute}
             />
           ) : (
-            /* AUTHENTIC ANIME QUEST UI (From user's screenshot!) */
+            /* AUTHENTIC ANIME QUEST UI */
             <div className="flex flex-col gap-2.5">
               {/* Feature Stage Mission Panel */}
               <AnimeStageBrief
-                episodeNumber={`0${activeStageId}話`}
-                episodeTitle={activeStageId === 2 ? "ナゾ × ノ × ショウジョ" : "旅立ち × ノ × 迷宮"}
+                episodeNumber={`EP.0${activeStageId}`}
+                episodeTitle={activeStageId === 2 ? "RIDDLE × OF × THE MAZE" : "DEPARTURE × INTO × LABYRINTH"}
                 recommendedPower={8000}
                 enemyName="Baise"
                 enemyImage={baiseImg}
@@ -404,16 +404,16 @@ export default function App() {
               {/* Hunter Team Deck Bar */}
               <AnimeTeamBar
                 totalPower={14569}
-                teamName="チーム 1"
+                teamName="TEAM 1"
                 onSelectMember={(m) => setSelectedMember(m)}
               />
 
-              {/* Action Buttons: 戻る (Back) & 出発する (Deploy / Start Maze) */}
+              {/* Action Buttons: BACK & DEPLOY */}
               <AnimeActionButtons
                 onBack={() => handleStageSelect(1)}
                 onDeploy={handleDeploy}
-                deployText="出発する"
-                backText="戻る"
+                deployText="DEPLOY"
+                backText="BACK"
               />
             </div>
           )}

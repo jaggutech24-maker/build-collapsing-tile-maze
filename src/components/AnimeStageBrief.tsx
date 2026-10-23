@@ -12,8 +12,8 @@ interface AnimeStageBriefProps {
 }
 
 export default function AnimeStageBrief({
-  episodeNumber = "02話",
-  episodeTitle = "ナゾ × ノ × ショウジョ",
+  episodeNumber = "EP.02",
+  episodeTitle = "RIDDLE × OF × THE MAZE",
   recommendedPower = 8000,
   enemyName = "Baise",
   enemyImage = baiseImg,
@@ -47,7 +47,7 @@ export default function AnimeStageBrief({
             <span className="manga-skew-reverse text-black font-display text-xs sm:text-sm font-black tracking-wider">
               {episodeNumber}
             </span>
-            <span className="manga-skew-reverse text-black font-jp text-xs sm:text-sm font-extrabold tracking-wide truncate">
+            <span className="manga-skew-reverse text-black font-display text-xs sm:text-sm font-extrabold tracking-wide truncate">
               {episodeTitle}
             </span>
           </div>
@@ -59,8 +59,8 @@ export default function AnimeStageBrief({
           <div className="flex flex-col gap-1.5 flex-1 max-w-[210px]">
             {/* Recommended Power Ribbon */}
             <div className="manga-skew bg-black border-2 border-black flex items-center justify-between px-2 py-0.5 text-white comic-shadow-sm">
-              <span className="manga-skew-reverse text-[10px] sm:text-xs font-black text-slate-200">
-                推奨戦闘力
+              <span className="manga-skew-reverse text-[10px] sm:text-xs font-black text-slate-200 uppercase tracking-tight">
+                REC. POWER
               </span>
               <span className="manga-skew-reverse font-display text-sm sm:text-base font-black text-white tracking-widest">
                 {recommendedPower.toLocaleString()}
@@ -97,9 +97,9 @@ export default function AnimeStageBrief({
             {/* Clear Reward (Rainbow Crystal) */}
             <div className="relative flex flex-col items-center">
               {/* Spiky / Angled CLEAR REWARD Badge */}
-              <div className="manga-skew bg-black border-2 border-[#ffe500] text-[#ffe500] text-[10px] sm:text-[11px] font-black px-2 py-0.5 comic-shadow-sm -mb-2 z-20">
-                <span className="manga-skew-reverse inline-block tracking-wider">
-                  クリア報酬
+              <div className="manga-skew bg-black border-2 border-[#ffe500] text-[#ffe500] text-[9px] sm:text-[10px] font-black px-2 py-0.5 comic-shadow-sm -mb-2 z-20">
+                <span className="manga-skew-reverse inline-block tracking-wider uppercase">
+                  CLEAR REWARD
                 </span>
               </div>
 
@@ -113,18 +113,18 @@ export default function AnimeStageBrief({
                 />
               </div>
 
-              {/* Attempts Left Text: あと1回! */}
-              <span className="comic-text text-white text-[11px] sm:text-xs font-black mt-1">
-                あと{attemptsLeft}回!
+              {/* Attempts Left Text */}
+              <span className="comic-text text-white text-[10px] sm:text-[11px] font-black mt-1 uppercase">
+                {attemptsLeft} LEFT!
               </span>
             </div>
 
             {/* Drop Reward (Hunter License Card / Chip) */}
             <div className="relative flex flex-col items-center">
               {/* Angled DROP Badge */}
-              <div className="manga-skew bg-[#e60012] border-2 border-black text-white text-[9px] font-black px-1.5 py-0.2 comic-shadow-sm -mb-1.5 z-20">
+              <div className="manga-skew bg-[#e60012] border-2 border-black text-white text-[9px] font-black px-2 py-0.2 comic-shadow-sm -mb-1.5 z-20 uppercase">
                 <span className="manga-skew-reverse inline-block">
-                  ドロップ
+                  DROP
                 </span>
               </div>
 

@@ -11,9 +11,9 @@ interface AnimeGachaModalProps {
 }
 
 const GACHA_CHARACTERS = [
-  { name: "Gon Freecss", jp: "ゴン＝フリークス", rarity: "SSR ★★★★★", type: "強化系 (Enhancer)", img: gonImg, phrase: "最初ハ グー！ジャン・ケン・グー！" },
-  { name: "Killua Zoldyck", jp: "キルア＝ゾルディック", rarity: "SSR ★★★★★", type: "変化系 (Transmuter)", img: killuaImg, phrase: "クセになってんだ、音殺して動くの。" },
-  { name: "Kurapika", jp: "クラピカ", rarity: "SSR ★★★★★", type: "具現化系 (Conjurer)", img: kurapikaImg, phrase: "命を賭けることと命を軽く扱うことは正反対だ。" },
+  { name: "Gon Freecss", jp: "Enhancer", rarity: "SSR ★★★★★", type: "Enhancement", img: gonImg, phrase: "First comes Rock! Janken Rock!" },
+  { name: "Killua Zoldyck", jp: "Transmuter", rarity: "SSR ★★★★★", type: "Transmutation", img: killuaImg, phrase: "It's a habit of mine, to move without a sound." },
+  { name: "Kurapika", jp: "Conjurer", rarity: "SSR ★★★★★", type: "Conjuration", img: kurapikaImg, phrase: "Risking your life and throwing it away are two very different things." },
 ];
 
 export default function AnimeGachaModal({
@@ -26,7 +26,7 @@ export default function AnimeGachaModal({
 
   const handleSummon = () => {
     if (gems < 5) {
-      alert("虹の結晶が足りません！ (Need at least 5 Rainbow Gems!)");
+      alert("Not enough Rainbow Gems! (Need at least 5 💎)");
       return;
     }
     const success = onSpendGems(5);
@@ -70,10 +70,10 @@ export default function AnimeGachaModal({
               <div className="w-20 h-20 rounded-full border-4 border-[#ffe500] bg-white flex items-center justify-center anim-nen">
                 <span className="text-4xl">⚡</span>
               </div>
-              <div className="comic-text text-[#ffe500] text-lg font-black">
-                SUMMONING NEN AURA...
+              <div className="comic-text text-[#ffe500] text-lg font-black uppercase">
+                UNLEASHING NEN AURA...
               </div>
-              <div className="text-xs text-white">オーラ解放中！</div>
+              <div className="text-xs text-white uppercase tracking-wider">Aura Power Rising!</div>
             </div>
           ) : summonResult ? (
             <div className="flex flex-col items-center gap-2 anim-pulse">
@@ -83,10 +83,10 @@ export default function AnimeGachaModal({
               <div className="w-24 h-24 rounded-full border-4 border-[#ffe500] bg-black overflow-hidden comic-shadow anim-nen">
                 <img src={summonResult.img} alt={summonResult.name} className="w-full h-full object-cover" />
               </div>
-              <div className="comic-text text-white text-base font-black">
+              <div className="comic-text text-white text-base font-black uppercase">
                 {summonResult.name}
               </div>
-              <div className="text-[11px] text-[#00f0ff] font-bold">
+              <div className="text-[11px] text-[#00f0ff] font-bold uppercase tracking-wider">
                 {summonResult.type}
               </div>
               <div className="text-[10px] text-yellow-300 italic max-w-[200px] mt-1 bg-black/80 px-2 py-0.5 border border-yellow-400">
@@ -96,11 +96,11 @@ export default function AnimeGachaModal({
           ) : (
             <div className="flex flex-col items-center gap-2">
               <img src={gemImg} alt="Gacha" className="w-20 h-20 object-contain anim-bounce" />
-              <div className="comic-text text-white text-sm font-black">
+              <div className="comic-text text-white text-sm font-black uppercase">
                 HUNTER PREMIUM RECRUIT
               </div>
               <p className="text-[11px] text-slate-300 max-w-[220px]">
-                Spend 5 Rainbow Gems to summon powerful Hunters to boost your Combat Power!
+                Spend 5 Rainbow Gems to summon powerful Hunters and boost your Combat Power!
               </p>
             </div>
           )}
@@ -117,7 +117,7 @@ export default function AnimeGachaModal({
         <button
           onClick={handleSummon}
           disabled={pulling || gems < 5}
-          className={`manga-skew w-full border-3 border-black py-2.5 comic-shadow-lg font-display text-base font-black tracking-wider transition-all cursor-pointer ${
+          className={`manga-skew w-full border-3 border-black py-2.5 comic-shadow-lg font-display text-base font-black tracking-wider transition-all cursor-pointer uppercase ${
             gems >= 5
               ? "bg-[#ffe500] hover:bg-yellow-300 text-black active:scale-95"
               : "bg-zinc-700 text-zinc-400 cursor-not-allowed"

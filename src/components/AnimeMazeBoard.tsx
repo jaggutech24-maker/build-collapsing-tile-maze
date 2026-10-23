@@ -51,18 +51,18 @@ export default function AnimeMazeBoard({
         {/* Retreat / Back button */}
         <button
           onClick={onRetreat}
-          className="manga-skew bg-black hover:bg-zinc-800 text-white border-2 border-[#ffe500] px-2.5 py-1 comic-shadow-sm flex items-center gap-1 cursor-pointer active:scale-95 transition-transform"
+          className="manga-skew bg-black hover:bg-zinc-800 text-white border-2 border-[#ffe500] px-3 py-1 comic-shadow-sm flex items-center gap-1 cursor-pointer active:scale-95 transition-transform"
         >
-          <span className="manga-skew-reverse text-[11px] font-black text-[#ffe500]">
-            ◀ 撤退 (RETREAT)
+          <span className="manga-skew-reverse text-[11px] font-display font-black text-[#ffe500] uppercase">
+            ◀ RETREAT
           </span>
         </button>
 
         {/* Live Battle Stats Ribbon */}
         <div className="flex items-center gap-1.5">
           {/* Level / Stage */}
-          <div className="manga-skew bg-[#e60012] border-2 border-black text-white px-2 py-0.5 comic-shadow-sm">
-            <span className="manga-skew-reverse font-display text-[11px] font-black tracking-wider">
+          <div className="manga-skew bg-[#e60012] border-2 border-black text-white px-2.5 py-0.5 comic-shadow-sm">
+            <span className="manga-skew-reverse font-display text-[11px] font-black tracking-wider uppercase">
               STAGE {level}
             </span>
           </div>
@@ -95,11 +95,11 @@ export default function AnimeMazeBoard({
 
       {/* Warning Mission Ticker */}
       <div className="w-full manga-skew bg-black border-2 border-[#e60012] px-3 py-1 mb-2 comic-shadow-sm flex items-center justify-between">
-        <span className="manga-skew-reverse text-[11px] font-black text-[#00f0ff] uppercase tracking-wide">
-          BATTLE MISSION:
+        <span className="manga-skew-reverse text-[11px] font-display font-black text-[#00f0ff] uppercase tracking-wide">
+          MISSION:
         </span>
-        <span className="manga-skew-reverse text-[11px] font-bold text-white tracking-tight truncate">
-          崩壊する迷路を突破せよ！ (Reach the Golden Gate!)
+        <span className="manga-skew-reverse text-[11px] font-display font-bold text-white tracking-tight truncate uppercase">
+          BREAK THROUGH THE CRUMBLING MAZE!
         </span>
       </div>
 
@@ -162,7 +162,7 @@ export default function AnimeMazeBoard({
                     {isExit ? (
                       <div className="relative z-10 flex flex-col items-center justify-center anim-bounce">
                         <span className="text-xl sm:text-2xl drop-shadow">🏆</span>
-                        <span className="text-[8px] font-black text-black bg-[#ffe500] px-1 rounded-xs border border-black leading-tight">
+                        <span className="text-[8px] font-black text-black bg-[#ffe500] px-1 rounded-xs border border-black leading-tight uppercase">
                           GOAL
                         </span>
                       </div>
@@ -176,7 +176,7 @@ export default function AnimeMazeBoard({
                     {/* Stepped Cracking Onomatopoeia */}
                     {t === CRACK && (
                       <div className="absolute inset-0 flex items-center justify-center z-20">
-                        <span className="comic-text text-[#ffe500] text-xs font-black anim-pulse">
+                        <span className="comic-text text-[#ffe500] text-xs font-black anim-pulse uppercase">
                           CRACK!
                         </span>
                       </div>
@@ -224,8 +224,8 @@ export default function AnimeMazeBoard({
                   <span className="manga-skew-reverse block comic-text-lg text-black text-2xl sm:text-3xl font-black tracking-widest uppercase">
                     STAGE CLEARED!
                   </span>
-                  <span className="manga-skew-reverse block text-black text-xs font-black tracking-wider">
-                    任務完了 ★★★
+                  <span className="manga-skew-reverse block text-black text-xs font-display font-black tracking-wider uppercase">
+                    MISSION ACCOMPLISHED ★★★
                   </span>
                 </div>
 
@@ -233,12 +233,12 @@ export default function AnimeMazeBoard({
                 <div className="flex items-center gap-2 mt-2 bg-black/90 border-2 border-[#00f0ff] px-4 py-1.5 rounded-sm comic-shadow">
                   <img src={gemImg} alt="Gem" className="w-8 h-8 object-contain" />
                   <div className="text-left">
-                    <div className="text-xs font-black text-[#00f0ff]">REWARD OBTAINED:</div>
+                    <div className="text-xs font-display font-black text-[#00f0ff] uppercase">REWARD OBTAINED:</div>
                     <div className="text-sm font-bold text-white">+1 Rainbow Gem!</div>
                   </div>
                 </div>
 
-                <p className="comic-text text-[#ffe500] text-base font-bold mt-1">
+                <p className="comic-text text-[#ffe500] text-base font-bold mt-1 uppercase">
                   {meme.t} - {meme.b}
                 </p>
 
@@ -247,8 +247,8 @@ export default function AnimeMazeBoard({
                   onClick={onNextLevel}
                   className="manga-skew mt-3 bg-[#e60012] hover:bg-red-500 active:scale-95 border-3 border-black text-white px-6 py-2.5 comic-shadow-lg font-display text-lg font-black tracking-wider cursor-pointer"
                 >
-                  <span className="manga-skew-reverse block">
-                    NEXT STAGE (次へ) ▶
+                  <span className="manga-skew-reverse block uppercase">
+                    NEXT STAGE ▶
                   </span>
                 </button>
               </div>
@@ -260,28 +260,28 @@ export default function AnimeMazeBoard({
                   <span className="manga-skew-reverse block comic-text-lg text-white text-2xl sm:text-3xl font-black tracking-widest uppercase">
                     MISSION FAILED
                   </span>
-                  <span className="manga-skew-reverse block text-yellow-300 text-xs font-black tracking-wider">
-                    作戦失敗 / 脱出不能
+                  <span className="manga-skew-reverse block text-yellow-300 text-xs font-display font-black tracking-wider uppercase">
+                    TRAPPED IN THE ABYSS
                   </span>
                 </div>
 
                 <div className="text-5xl mt-1">{meme.e}</div>
-                <div className="comic-text text-white text-lg font-black">{meme.t}</div>
+                <div className="comic-text text-white text-lg font-black uppercase">{meme.t}</div>
                 <div className="text-xs text-slate-300 font-bold">{meme.b}</div>
 
                 {/* Retry Buttons */}
                 <div className="flex items-center gap-2 mt-3">
                   <button
                     onClick={onRestart}
-                    className="manga-skew bg-[#ffe500] hover:bg-yellow-300 active:scale-95 border-3 border-black text-black px-4 py-2 comic-shadow font-display text-sm font-black tracking-wider cursor-pointer"
+                    className="manga-skew bg-[#ffe500] hover:bg-yellow-300 active:scale-95 border-3 border-black text-black px-4 py-2 comic-shadow font-display text-sm font-black tracking-wider cursor-pointer uppercase"
                   >
                     <span className="manga-skew-reverse block">
-                      ↺ リトライ (RETRY)
+                      ↺ RETRY
                     </span>
                   </button>
                   <button
                     onClick={onRetreat}
-                    className="manga-skew bg-zinc-800 hover:bg-zinc-700 active:scale-95 border-2 border-white text-white px-3 py-2 comic-shadow text-xs font-black cursor-pointer"
+                    className="manga-skew bg-zinc-800 hover:bg-zinc-700 active:scale-95 border-2 border-white text-white px-3 py-2 comic-shadow font-display text-xs font-black cursor-pointer uppercase"
                   >
                     <span className="manga-skew-reverse block">
                       STAGE MENU

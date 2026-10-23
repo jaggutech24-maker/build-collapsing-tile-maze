@@ -27,58 +27,58 @@ const DEFAULT_PARTY: HunterPartyMember[] = [
   {
     id: "gon",
     name: "Gon Freecss",
-    jpName: "ゴン",
+    jpName: "Enhancer",
     level: 8,
     maxLevel: 40,
     stars: 3,
     type: "rock",
     image: gonImg,
-    affinity: "強化系 (Enhancer)",
+    affinity: "Enhancement",
     power: 5240,
   },
   {
     id: "killua",
     name: "Killua Zoldyck",
-    jpName: "キルア",
+    jpName: "Transmuter",
     level: 8,
     maxLevel: 40,
     stars: 3,
     type: "scissors",
     image: killuaImg,
-    affinity: "変化系 (Transmuter)",
+    affinity: "Transmutation",
     power: 5120,
   },
   {
     id: "kurapika",
     name: "Kurapika",
-    jpName: "クラピカ",
+    jpName: "Conjurer",
     level: 1,
     maxLevel: 40,
     stars: 3,
     type: "paper",
     image: kurapikaImg,
-    affinity: "具現化系 (Conjurer)",
+    affinity: "Conjuration",
     power: 4209,
   },
 ];
 
 export default function AnimeTeamBar({
   totalPower = 14569,
-  teamName = "チーム 1",
+  teamName = "TEAM 1",
   party = DEFAULT_PARTY,
   onSelectMember,
 }: AnimeTeamBarProps) {
   return (
     <div className="relative w-full max-w-md mx-auto px-2 select-none">
-      {/* Top Tabs: チーム選択 / チーム 1 */}
+      {/* Top Tabs: TEAM SELECT / TEAM 1 */}
       <div className="flex items-center gap-1 pl-4 -mb-1 relative z-10">
         <div className="manga-skew bg-black border-2 border-black px-2.5 py-0.5 text-white comic-shadow-sm">
-          <span className="manga-skew-reverse text-[10px] sm:text-xs font-black tracking-wider text-slate-200">
-            チーム選択
+          <span className="manga-skew-reverse text-[10px] sm:text-xs font-black tracking-wider text-slate-200 uppercase">
+            TEAM SELECT
           </span>
         </div>
         <div className="manga-skew bg-[#ffe500] border-2 border-black px-3 py-0.5 text-black comic-shadow-sm">
-          <span className="manga-skew-reverse text-[10px] sm:text-xs font-black tracking-wider">
+          <span className="manga-skew-reverse text-[10px] sm:text-xs font-black tracking-wider uppercase">
             {teamName}
           </span>
         </div>
@@ -143,12 +143,12 @@ export default function AnimeTeamBar({
             })}
           </div>
 
-          {/* Right/Bottom side: 総合戦闘力 (TOTAL POWER) */}
+          {/* Right/Bottom side: TOTAL POWER */}
           <div className="flex flex-col items-end justify-center pl-2">
             {/* Slanted Red Badge */}
-            <div className="manga-skew bg-[#e60012] border-2 border-black text-white text-[10px] sm:text-[11px] font-black px-2 py-0.5 comic-shadow-sm -mb-1 z-10">
-              <span className="manga-skew-reverse inline-block tracking-wider">
-                総合戦闘力
+            <div className="manga-skew bg-[#e60012] border-2 border-black text-white text-[9px] sm:text-[10px] font-black px-2 py-0.5 comic-shadow-sm -mb-1 z-10">
+              <span className="manga-skew-reverse inline-block tracking-wider uppercase">
+                TOTAL POWER
               </span>
             </div>
 

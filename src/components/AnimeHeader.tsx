@@ -11,7 +11,7 @@ interface AnimeHeaderProps {
 }
 
 export default function AnimeHeader({
-  chapterTitle = "ナゾ × ノ × ショウジョ",
+  chapterTitle = "RIDDLE × OF × THE MAZE",
   chapterNumber = "02",
   gems = 10,
   muted = false,
@@ -31,21 +31,21 @@ export default function AnimeHeader({
         {/* Left Side: Chapter & Story Quest Badge */}
         <div className="relative z-10 flex flex-col justify-center">
           <div className="flex items-center gap-1.5">
-            {/* Red slanted badge: ストーリークエスト */}
-            <span className="manga-skew inline-block bg-[#e60012] text-white text-[11px] sm:text-xs font-black px-2 py-0.5 border-2 border-black comic-shadow-sm tracking-wider">
-              ストーリークエスト
+            {/* Red slanted badge: STORY QUEST */}
+            <span className="manga-skew inline-block bg-[#e60012] text-white text-[11px] sm:text-xs font-black px-2 py-0.5 border-2 border-black comic-shadow-sm tracking-wider uppercase">
+              STORY QUEST
             </span>
             <span className="text-[10px] text-yellow-400 font-bold uppercase tracking-widest hidden sm:inline">
-              STORY QUEST
+              HUNTER MISSION
             </span>
           </div>
 
           {/* Chapter title with big bold red/white text */}
-          <div className="flex items-baseline gap-1 mt-0.5">
+          <div className="flex items-baseline gap-1.5 mt-0.5">
             <span className="comic-text-lg text-2xl sm:text-3xl text-[#e60012] tracking-tighter">
-              {chapterNumber}章
+              CH.{chapterNumber}
             </span>
-            <h1 className="comic-text text-lg sm:text-xl text-white tracking-wide uppercase drop-shadow">
+            <h1 className="comic-text text-base sm:text-lg text-white tracking-wide uppercase drop-shadow truncate max-w-[220px] sm:max-w-none">
               {chapterTitle}
             </h1>
           </div>

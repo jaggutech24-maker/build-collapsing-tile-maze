@@ -1,0 +1,44 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Anton&family=Nunito:wght@600;800&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-meme: "Anton", Impact, sans-serif;
+  --font-body: "Nunito", system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: radial-gradient(circle at 80% 0%, #94488055 0%, transparent 45%), linear-gradient(160deg, #001C3D 0%, #332277 60%, #944880 130%) fixed;
+  color: #fff7e0;
+  min-height: 100dvh;
+  overscroll-behavior: none;
+}
+
+.meme-text {
+  font-family: var(--font-meme);
+  text-transform: uppercase;
+  color: #fff;
+  -webkit-text-stroke: 2px #000;
+  paint-order: stroke fill;
+  text-shadow: 3px 3px 0 #000;
+  letter-spacing: 1px;
+}
+
+@keyframes crack { 0%,100% { transform: rotate(0) } 25% { transform: rotate(-4deg) translateX(-2px) } 75% { transform: rotate(4deg) translateX(2px) } }
+@keyframes fall { to { transform: translateY(160%) rotate(35deg) scale(.5); opacity: 0 } }
+@keyframes bump { 0%,100% { transform: translateX(0) } 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }
+@keyframes pop { 0% { transform: scale(.3) rotate(-12deg); opacity: 0 } 70% { transform: scale(1.1) rotate(3deg) } 100% { transform: scale(1) rotate(0); opacity: 1 } }
+@keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
+@keyframes confetti { to { transform: translateY(110vh) rotate(720deg) } }
+
+.tile-crack { animation: crack .18s linear infinite; background: #944880 !important; }
+.tile-fall { animation: fall .7s ease-in forwards; }
+.board-bump { animation: bump .15s linear; }
+.pop { animation: pop .4s cubic-bezier(.2,1.6,.4,1) both; }
+.bob { animation: bob 1s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tile-crack, .bob, .board-bump { animation: none; }
+}

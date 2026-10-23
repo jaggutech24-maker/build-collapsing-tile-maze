@@ -1,28 +1,37 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { clsx } from "clsx";
+import AnimeHeader from "./components/AnimeHeader";
+import AnimeStageBrief from "./components/AnimeStageBrief";
+import AnimeStageCarousel, { type StageNode } from "./components/AnimeStageCarousel";
+import AnimeTeamBar, { type HunterPartyMember } from "./components/AnimeTeamBar";
+import AnimeActionButtons from "./components/AnimeActionButtons";
+import AnimeBottomNav, { type NavTab } from "./components/AnimeBottomNav";
+import AnimeMazeBoard from "./components/AnimeMazeBoard";
+import AnimeGachaModal from "./components/AnimeGachaModal";
+import AnimeTeamModal from "./components/AnimeTeamModal";
 import { music, setMuted, sfx } from "./sound";
+import baiseImg from "./assets/baise.jpg";
 
-// tile states
+// Tile states
 const WALL = 0, SOLID = 1, CRACK = 2, GONE = 3;
 
 const DEAD_MEMES = [
-  { e: "🔥🐶☕", t: "THIS IS FINE", b: "(it was not fine)" },
-  { e: "🗿", t: "SKILL ISSUE", b: "git gud" },
-  { e: "🤡", t: "TASK FAILED", b: "SUCCESSFULLY" },
-  { e: "🐸☕", t: "BUT THAT'S", b: "NONE OF MY BUSINESS" },
-  { e: "💀", t: "BRUH.", b: "you had ONE job" },
-  { e: "🧍🕳️", t: "SIR, THIS IS A", b: "CRUMBLING MAZE" },
-  { e: "😭🧀", t: "I WAS SO CLOSE", b: "the cheese knows" },
+  { e: "🔥🐶☕", t: "THIS IS FINE", b: "(Floor collapsed into the abyss!)" },
+  { e: "🗿", t: "SKILL ISSUE", b: "Plan your route before stepping!" },
+  { e: "🤡", t: "TASK FAILED", b: "Every step is permanent!" },
+  { e: "💀", t: "BRUH.", b: "No way back in this maze!" },
+  { e: "😭🧀", t: "SO CLOSE", b: "The exit was right there..." },
 ];
+
 const WIN_MEMES = [
-  { e: "😎🏆", t: "BIG BRAIN TIME", b: "200 IQ plays only" },
-  { e: "🕺📈", t: "NOT STONKS?", b: "STONKS!!" },
-  { e: "🐭👑", t: "ABSOLUTE", b: "CINEMA" },
+  { e: "😎🏆", t: "BIG BRAIN HUNTER", b: "Flawless route execution!" },
+  { e: "⚡👑", t: "NEN MASTER", b: "Stage cleared with 3 stars!" },
+  { e: "🕺📈", t: "MISSION COMPLETE", b: "Hunter License verified!" },
 ];
+
 const pick = <T,>(a: T[]) => a[Math.floor(Math.random() * a.length)];
 
 function makeLevel(lv: number) {
-  const n = Math.min(6 + lv, 11);
+  const n = Math.min(6 + lv, 10);
   const total = n * n;
   const target = total - 1;
   const minLen = Math.floor(n * 2.2);
@@ -45,7 +54,6 @@ function makeLevel(lv: number) {
             validNeighbors.push(nxt);
             continue;
           }
-          // Fast BFS connectivity check through unvisited cells
           const q: number[] = [nxt];
           const reach = new Set<number>([nxt]);
           let canReach = false;
@@ -90,7 +98,6 @@ function makeLevel(lv: number) {
     }
   }
 
-  // Fallback winding path if needed
   if (!solutionPath) {
     solutionPath = [];
     let x = 0, y = 0;
@@ -102,11 +109,9 @@ function makeLevel(lv: number) {
     solutionPath.push(target);
   }
 
-  // Build grid
   const tiles: number[] = Array(total).fill(WALL);
   for (const idx of solutionPath) tiles[idx] = SOLID;
 
-  // Add clever decoy branches so it remains a thoughtful puzzle
   const branchSeeds = solutionPath.slice(1, -2);
   const branchCount = Math.min(3 + lv * 2, Math.floor(solutionPath.length * 0.45));
   for (let b = 0; b < branchCount; b++) {
@@ -123,14 +128,13 @@ function makeLevel(lv: number) {
         }
       }
       if (candidates.length === 0) break;
-      const pick = candidates[(Math.random() * candidates.length) | 0];
-      tiles[pick] = SOLID;
-      cur = pick;
+      const chosenCandidate = candidates[(Math.random() * candidates.length) | 0];
+      tiles[chosenCandidate] = SOLID;
+      cur = chosenCandidate;
     }
   }
 
-  // Place coins along the verified solution path so EVERY coin has a guaranteed connecting path to the cheese
-  const numCoins = Math.min(2 + lv, 7);
+  const numCoins = Math.min(2 + lv, 6);
   const coins = new Set<number>();
   const eligible = solutionPath.slice(2, -2);
   if (eligible.length > 0) {
@@ -146,9 +150,29 @@ function makeLevel(lv: number) {
 
 type Status = "play" | "dead" | "won";
 
+const INITIAL_STAGES: StageNode[] = [
+  { id: 1, type: "story", title: "旅立ち", subTitle: "Departure", status: "complete" },
+  { id: 2, type: "battle", title: "ナゾ × ノ × ショウジョ", subTitle: "Mystery Girl", status: "active", isNew: true },
+  { id: 3, type: "trial", title: "ハンター試験", subTitle: "Hunter Exam", status: "locked" },
+  { id: 4, type: "boss", title: "幻影旅団", subTitle: "Phantom Troupe", status: "locked" },
+];
+
 export default function App() {
-  const [level, setLevel] = useState(1);
-  const [lv, setLv] = useState(() => makeLevel(1));
+  // Navigation & Screen View
+  const [activeTab, setActiveTab] = useState<NavTab>("quest");
+  const [inBattle, setInBattle] = useState(false);
+  const [stages, setStages] = useState<StageNode[]>(INITIAL_STAGES);
+  const [activeStageId, setActiveStageId] = useState(2);
+
+  // Currencies & Gacha
+  const [gems, setGems] = useState(10);
+  const [showGacha, setShowGacha] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<HunterPartyMember | null>(null);
+  const [showMenu, setShowMenu] = useState(false);
+
+  // Maze Logic
+  const [level, setLevel] = useState(2);
+  const [lv, setLv] = useState(() => makeLevel(2));
   const [tiles, setTiles] = useState<number[]>(lv.tiles);
   const [coins, setCoins] = useState(lv.coins);
   const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -163,7 +187,7 @@ export default function App() {
 
   const later = (fn: () => void, ms: number) => timers.current.push(window.setTimeout(fn, ms));
 
-  const load = useCallback((l: ReturnType<typeof makeLevel>) => {
+  const loadLevelData = useCallback((l: ReturnType<typeof makeLevel>) => {
     timers.current.forEach(clearTimeout);
     timers.current = [];
     setLv(l);
@@ -206,9 +230,15 @@ export default function App() {
       if (to === n * n - 1) {
         setMeme(pick(WIN_MEMES));
         setScore((s) => s + 50);
+        // Award a rainbow gem on win
+        setGems((g) => g + 1);
         later(() => {
           sfx.win();
           setStatus("won");
+          // Unlock next stage if on stage 2
+          setStages((prev) =>
+            prev.map((s) => (s.id === 3 ? { ...s, status: "active", isNew: true } : s))
+          );
         }, 150);
         return;
       }
@@ -229,6 +259,7 @@ export default function App() {
   );
 
   useEffect(() => {
+    if (!inBattle) return;
     const keys: Record<string, [number, number]> = {
       ArrowUp: [0, -1], w: [0, -1], ArrowDown: [0, 1], s: [0, 1],
       ArrowLeft: [-1, 0], a: [-1, 0], ArrowRight: [1, 0], d: [1, 0],
@@ -242,7 +273,7 @@ export default function App() {
     };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
-  }, [move]);
+  }, [inBattle, move]);
 
   useEffect(() => {
     const startAudioOnFirstGesture = () => {
@@ -260,10 +291,6 @@ export default function App() {
     };
   }, [mute]);
 
-  const next = () => {
-    setLevel((l) => l + 1);
-    load(makeLevel(level + 1));
-  };
   const toggleMute = () => {
     const nextMute = !mute;
     setMute(nextMute);
@@ -273,116 +300,205 @@ export default function App() {
     }
   };
 
-  const pad = "h-16 w-16 rounded-2xl bg-white/10 text-3xl ring-1 ring-white/15 select-none touch-manipulation active:bg-[#E47CB8]/40";
+  const handleSpendGems = (amount: number) => {
+    if (gems >= amount) {
+      setGems((g) => g - amount);
+      return true;
+    }
+    return false;
+  };
+
+  const handleStageSelect = (stageId: number) => {
+    setActiveStageId(stageId);
+    setLevel(stageId);
+    loadLevelData(makeLevel(stageId));
+  };
+
+  const handleDeploy = () => {
+    sfx.win();
+    setInBattle(true);
+  };
+
+  const handleRetreat = () => {
+    setInBattle(false);
+  };
+
+  const handleNextLevel = () => {
+    const nextL = level + 1;
+    setLevel(nextL);
+    setActiveStageId(nextL);
+    loadLevelData(makeLevel(nextL));
+  };
+
+  const handleTabChange = (tab: NavTab) => {
+    setActiveTab(tab);
+    if (tab === "gacha") {
+      setShowGacha(true);
+    } else if (tab === "menu") {
+      setShowMenu(true);
+    }
+  };
 
   return (
-    <div className="mx-auto flex max-w-xl flex-col items-center gap-4 px-3 py-5">
-      <h1 className="font-display text-center text-4xl font-bold leading-none tracking-tight text-[#F0EFEB] sm:text-5xl">
-        Crumbling Maze <span className="bob inline-block">🧀</span>
-        <div className="mt-2 text-lg font-medium text-[#D8F878]">No Way Back</div>
-      </h1>
+    <div className="min-h-dvh flex flex-col items-center justify-between bg-cover bg-center overflow-x-hidden">
+      {/* Anime Mobile Screen Frame */}
+      <div className="relative w-full max-w-[480px] min-h-dvh flex flex-col justify-between border-x-4 border-black/80 bg-gradient-to-b from-[#0642a4] via-[#05378c] to-[#021f57] shadow-2xl">
+        {/* Dynamic Background Manga Lines & Shards */}
+        <div className="absolute inset-0 halftone-overlay pointer-events-none opacity-20" />
+        <div className="absolute top-24 -left-6 w-12 h-12 bg-[#ffe500] rotate-45 border-3 border-black pointer-events-none -z-0" />
+        <div className="absolute top-96 -right-6 w-14 h-14 bg-[#ffe500] -rotate-12 border-3 border-black pointer-events-none -z-0" />
+        <div className="absolute bottom-40 -left-4 w-10 h-10 bg-[#e60012] rotate-12 border-2 border-black pointer-events-none -z-0" />
 
-      <div className="flex w-full items-center justify-between gap-2 text-lg font-extrabold">
-        <span className="rounded-full bg-white/10 text-[#F0EFEB] backdrop-blur px-4 py-1">Level {level}</span>
-        <span className="rounded-full bg-white/10 text-[#F0EFEB] backdrop-blur px-4 py-1">🪙 {score}</span>
-        <span className="rounded-full bg-white/10 text-[#F0EFEB] backdrop-blur px-4 py-1">👣 {moves}</span>
-        <button onClick={toggleMute} aria-label="Toggle sound" className="rounded-full bg-white/10 text-[#F0EFEB] backdrop-blur px-3 py-1">
-          {mute ? "🔇" : "🔊"}
-        </button>
+        {/* 1. TOP HEADER */}
+        <AnimeHeader
+          chapterNumber={activeStageId < 10 ? `0${activeStageId}` : `${activeStageId}`}
+          chapterTitle={activeStageId === 2 ? "ナゾ × ノ × ショウジョ" : activeStageId === 1 ? "旅立ち × ノ × 始まり" : "試練 × ノ × 迷宮"}
+          gems={gems}
+          muted={mute}
+          onToggleMute={toggleMute}
+          onOpenGacha={() => setShowGacha(true)}
+        />
+
+        {/* 2. MAIN CONTENT AREA */}
+        <main className="relative z-10 flex-1 flex flex-col justify-center py-2">
+          {inBattle ? (
+            /* COLLAPSING MAZE BATTLE ARENA */
+            <AnimeMazeBoard
+              n={n}
+              tiles={tiles}
+              coins={coins}
+              pos={pos}
+              bump={bump}
+              score={score}
+              moves={moves}
+              level={level}
+              onMove={move}
+              onRestart={() => loadLevelData(lv)}
+              onRetreat={handleRetreat}
+              status={status}
+              onNextLevel={handleNextLevel}
+              meme={meme}
+              audioMuted={mute}
+              onToggleAudio={toggleMute}
+            />
+          ) : (
+            /* AUTHENTIC ANIME QUEST UI (From user's screenshot!) */
+            <div className="flex flex-col gap-2.5">
+              {/* Feature Stage Mission Panel */}
+              <AnimeStageBrief
+                episodeNumber={`0${activeStageId}話`}
+                episodeTitle={activeStageId === 2 ? "ナゾ × ノ × ショウジョ" : "旅立ち × ノ × 迷宮"}
+                recommendedPower={8000}
+                enemyName="Baise"
+                enemyImage={baiseImg}
+                attemptsLeft={1}
+              />
+
+              {/* Stage Node Carousel */}
+              <AnimeStageCarousel
+                stages={stages}
+                activeStageId={activeStageId}
+                onSelectStage={handleStageSelect}
+              />
+
+              {/* Hunter Team Deck Bar */}
+              <AnimeTeamBar
+                totalPower={14569}
+                teamName="チーム 1"
+                onSelectMember={(m) => setSelectedMember(m)}
+              />
+
+              {/* Action Buttons: 戻る (Back) & 出発する (Deploy / Start Maze) */}
+              <AnimeActionButtons
+                onBack={() => handleStageSelect(1)}
+                onDeploy={handleDeploy}
+                deployText="出発する"
+                backText="戻る"
+              />
+            </div>
+          )}
+        </main>
+
+        {/* 3. BOTTOM NAVIGATION BAR */}
+        <AnimeBottomNav
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+          gachaBadge={gems >= 5}
+        />
       </div>
 
-      <div key={bump} className={clsx("relative w-full rounded-3xl bg-[#001C3D]/60 p-2 ring-1 ring-white/15 backdrop-blur", bump > 0 && "board-bump")}>
-        <div className="relative grid gap-1" style={{ gridTemplateColumns: `repeat(${n}, 1fr)` }}>
-          {tiles.map((t, i) => {
-            const tx = i % n, ty = (i / n) | 0;
-            const dx = tx - pos.x, dy = ty - pos.y;
-            const isAdj = Math.abs(dx) + Math.abs(dy) === 1 && t === SOLID;
-            return (
-              <div
-                key={i}
-                onClick={() => isAdj && move(dx, dy)}
-                className={clsx(
-                  "relative aspect-square",
-                  isAdj && "cursor-pointer transition-transform hover:scale-[1.04]",
-                )}
-              >
-                {t === WALL && <div className="h-full w-full rounded-lg bg-white/5" />}
-                {(t === SOLID || t === CRACK) && (
-                  <div
-                    className={clsx(
-                      "flex h-full w-full items-center justify-center rounded-xl border-b-4 border-[#944880] bg-gradient-to-br from-[#F0EFEB] to-[#E47CB8] text-xl transition-colors",
-                      isAdj && "ring-2 ring-[#D8F878]/60 hover:ring-[#D8F878]",
-                      t === CRACK && "tile-crack",
-                    )}
-                  >
-                    {coins.has(i) ? <span className="bob h-1/2 w-1/2 rounded-full bg-[#D8F878] ring-4 ring-[#001C3D]/30" /> : i === n * n - 1 ? <span className="bob">🧀</span> : ""}
-                  </div>
-                )}
-                {t === GONE && <div className="tile-fall h-full w-full rounded-xl bg-[#E47CB8]" />}
-              </div>
-            );
-          })}
-          <div
-            className="pointer-events-none absolute left-0 top-0 flex items-center justify-center text-2xl transition-transform duration-100 sm:text-3xl"
-            style={{ width: `${100 / n}%`, height: `${100 / n}%`, transform: `translate(${pos.x * 100}%, ${pos.y * 100}%)` }}
-          >
-            {status === "dead" ? "😵" : "🐭"}
+      {/* MODALS */}
+      {/* Gacha Modal */}
+      {showGacha && (
+        <AnimeGachaModal
+          gems={gems}
+          onSpendGems={handleSpendGems}
+          onClose={() => {
+            setShowGacha(false);
+            setActiveTab("quest");
+          }}
+        />
+      )}
+
+      {/* Team Inspection Modal */}
+      {selectedMember && (
+        <AnimeTeamModal
+          member={selectedMember}
+          onClose={() => setSelectedMember(null)}
+        />
+      )}
+
+      {/* Menu / Info Modal */}
+      {showMenu && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 select-none">
+          <div className="relative w-full max-w-sm border-4 border-black bg-gradient-to-b from-[#021b44] to-[#01091a] p-4 comic-shadow-xl text-center rounded-sm">
+            <button
+              onClick={() => {
+                setShowMenu(false);
+                setActiveTab("quest");
+              }}
+              className="manga-skew absolute top-2 right-2 w-8 h-8 bg-[#e60012] border-2 border-black text-white font-black text-sm flex items-center justify-center comic-shadow-sm cursor-pointer"
+            >
+              <span className="manga-skew-reverse">✕</span>
+            </button>
+
+            <div className="manga-skew inline-block bg-[#ffe500] border-2 border-black px-4 py-1 comic-shadow-sm mb-3">
+              <span className="manga-skew-reverse font-display text-black text-sm font-black tracking-wider uppercase">
+                SYSTEM MENU
+              </span>
+            </div>
+
+            <div className="text-left bg-black/70 border-2 border-white/40 p-3 rounded-sm space-y-2 text-xs text-white">
+              <div className="font-bold text-[#ffe500] text-sm">Rules of the Collapsing Maze:</div>
+              <ul className="list-disc list-inside space-y-1 text-slate-200">
+                <li>Every tile you step off collapses into the void forever.</li>
+                <li>Reach the Golden Hunter Gate 🏆 without getting trapped.</li>
+                <li>Gather Nen Orbs 🪙 for extra bonus score!</li>
+                <li>Earn Rainbow Gems 💎 to recruit legendary Hunters in Gacha!</li>
+              </ul>
+            </div>
+
+            <button
+              onClick={toggleMute}
+              className="manga-skew w-full mt-3 bg-black hover:bg-zinc-800 border-2 border-yellow-400 py-2 text-yellow-300 font-bold text-xs comic-shadow cursor-pointer"
+            >
+              <span className="manga-skew-reverse">
+                BGM & SFX: {mute ? "OFF (MUTED)" : "ON (PLAYING)"}
+              </span>
+            </button>
+
+            <button
+              onClick={() => {
+                setShowMenu(false);
+                setActiveTab("quest");
+              }}
+              className="manga-skew w-full mt-3 bg-[#ffe500] hover:bg-yellow-300 border-3 border-black py-2 font-display text-black font-black text-sm comic-shadow cursor-pointer"
+            >
+              <span className="manga-skew-reverse">CLOSE</span>
+            </button>
           </div>
         </div>
-
-        {status !== "play" && (
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-3xl bg-[#001C3D]/85 backdrop-blur-sm p-4 text-center">
-            <div className="pop flex flex-col items-center gap-1">
-              <div className="text-7xl">{meme.e}</div>
-              <div className="meme-text text-3xl">{meme.t}</div>
-              <div className="meme-text text-2xl">{meme.b}</div>
-              {status === "won" && <div className="font-bold text-[#D8F878]">+50 cheese bonus!</div>}
-            </div>
-            <div className="flex gap-2">
-              {status === "won" ? (
-                <button onClick={next} className="rounded-xl bg-[#D8F878] px-5 py-2 font-display text-lg font-bold text-[#001C3D] hover:brightness-95">
-                  Next level
-                </button>
-              ) : (
-                <>
-                  <button onClick={() => load(lv)} className="rounded-xl bg-[#D8F878] px-5 py-2 font-display text-lg font-bold text-[#001C3D] hover:brightness-95">
-                    Retry same maze
-                  </button>
-                  <button onClick={() => load(makeLevel(level))} className="rounded-xl bg-[#E47CB8] px-5 py-2 font-display text-lg font-bold text-[#001C3D] hover:brightness-95">
-                    New maze
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-        )}
-        {status === "won" && (
-          <div className="pointer-events-none fixed inset-0 z-20 overflow-hidden" aria-hidden>
-            {Array.from({ length: 24 }, (_, i) => (
-              <span key={i} className="absolute -top-10 text-3xl" style={{ left: `${(i * 4.3) % 100}%`, animation: `confetti ${2 + (i % 5) * 0.4}s linear ${(i % 7) * 0.1}s forwards` }}>
-                {["🎉", "🧀", "⭐", "🪙"][i % 4]}
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <p className="text-center text-sm font-semibold text-[#F0EFEB]/70">
-        Every cracker you leave crumbles. Grab 🪙, reach 🧀, never get stuck. Arrow keys / WASD.
-      </p>
-
-      <div className="grid grid-cols-3 place-items-center gap-2 sm:hidden">
-        <span />
-        <button className={pad} onClick={() => move(0, -1)}>⬆️</button>
-        <span />
-        <button className={pad} onClick={() => move(-1, 0)}>⬅️</button>
-        <button className={pad} onClick={() => move(0, 1)}>⬇️</button>
-        <button className={pad} onClick={() => move(1, 0)}>➡️</button>
-      </div>
-
-      <button onClick={() => load(lv)} className="text-sm font-bold text-[#E47CB8] underline">
-        Restart this maze
-      </button>
+      )}
     </div>
   );
 }

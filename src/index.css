@@ -1,44 +1,229 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Anton&family=Nunito:wght@600;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bangers&family=Mochiy+Pop+One&family=Russo+One&family=Space+Grotesk:wght@700;900&family=Noto+Sans+JP:wght@700;900&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Space Grotesk", system-ui, sans-serif;
-  --font-meme: "Anton", Impact, sans-serif;
-  --font-body: "Nunito", system-ui, sans-serif;
+  --font-display: "Russo One", "Mochiy Pop One", "Bangers", "Noto Sans JP", sans-serif;
+  --font-comic: "Bangers", "Russo One", cursive;
+  --font-jp: "Mochiy Pop One", "Noto Sans JP", "Russo One", sans-serif;
+  --font-body: "Space Grotesk", "Noto Sans JP", system-ui, sans-serif;
+}
+
+:root {
+  --anime-blue: #0963df;
+  --anime-blue-dark: #003087;
+  --anime-yellow: #ffe500;
+  --anime-yellow-dark: #e0bb00;
+  --anime-red: #e60012;
+  --anime-red-dark: #99000a;
+  --anime-cyan: #00f0ff;
+  --anime-black: #050505;
 }
 
 body {
   margin: 0;
+  padding: 0;
   font-family: var(--font-body);
-  background: radial-gradient(circle at 80% 0%, #94488055 0%, transparent 45%), linear-gradient(160deg, #001C3D 0%, #332277 60%, #944880 130%) fixed;
-  color: #fff7e0;
+  background-color: #033c94;
+  /* Deep Anime Comic Halftone Pattern with Speed Gradients */
+  background-image: 
+    radial-gradient(rgba(0, 0, 0, 0.45) 2.4px, transparent 2.8px),
+    linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, transparent 45%, rgba(255, 255, 255, 0.1) 100%),
+    linear-gradient(170deg, #0f6fee 0%, #0848be 50%, #00236a 100%);
+  background-size: 14px 14px, 100% 100%, 100% 100%;
+  background-attachment: fixed;
+  color: #ffffff;
   min-height: 100dvh;
   overscroll-behavior: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.meme-text {
-  font-family: var(--font-meme);
-  text-transform: uppercase;
-  color: #fff;
+/* Manga / Comic Text Outlines & Shadows */
+.comic-text {
+  font-family: var(--font-display);
+  font-style: italic;
   -webkit-text-stroke: 2px #000;
   paint-order: stroke fill;
-  text-shadow: 3px 3px 0 #000;
-  letter-spacing: 1px;
+  text-shadow: 2.5px 2.5px 0 #000;
 }
 
-@keyframes crack { 0%,100% { transform: rotate(0) } 25% { transform: rotate(-4deg) translateX(-2px) } 75% { transform: rotate(4deg) translateX(2px) } }
-@keyframes fall { to { transform: translateY(160%) rotate(35deg) scale(.5); opacity: 0 } }
-@keyframes bump { 0%,100% { transform: translateX(0) } 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }
-@keyframes pop { 0% { transform: scale(.3) rotate(-12deg); opacity: 0 } 70% { transform: scale(1.1) rotate(3deg) } 100% { transform: scale(1) rotate(0); opacity: 1 } }
-@keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
-@keyframes confetti { to { transform: translateY(110vh) rotate(720deg) } }
+.comic-text-lg {
+  font-family: var(--font-display);
+  font-style: italic;
+  -webkit-text-stroke: 3.5px #000;
+  paint-order: stroke fill;
+  text-shadow: 4px 4px 0 #000;
+}
 
-.tile-crack { animation: crack .18s linear infinite; background: #944880 !important; }
-.tile-fall { animation: fall .7s ease-in forwards; }
-.board-bump { animation: bump .15s linear; }
-.pop { animation: pop .4s cubic-bezier(.2,1.6,.4,1) both; }
-.bob { animation: bob 1s ease-in-out infinite; }
+.comic-text-sm {
+  font-family: var(--font-display);
+  font-style: italic;
+  -webkit-text-stroke: 1.5px #000;
+  paint-order: stroke fill;
+  text-shadow: 1.8px 1.8px 0 #000;
+}
 
-@media (prefers-reduced-motion: reduce) {
-  .tile-crack, .bob, .board-bump { animation: none; }
+.comic-stroke-white {
+  -webkit-text-stroke: 2px #fff;
+  paint-order: stroke fill;
+  text-shadow: 2px 2px 0 #000;
+}
+
+/* Hard Comic Shadows */
+.comic-shadow {
+  box-shadow: 4px 4px 0 #000;
+}
+
+.comic-shadow-lg {
+  box-shadow: 6px 6px 0 #000;
+}
+
+.comic-shadow-xl {
+  box-shadow: 8px 8px 0 #000;
+}
+
+.comic-shadow-sm {
+  box-shadow: 2.5px 2.5px 0 #000;
+}
+
+/* Skew Transforms */
+.manga-skew {
+  transform: skewX(-8deg);
+}
+
+.manga-skew-reverse {
+  transform: skewX(8deg);
+}
+
+.manga-skew-sm {
+  transform: skewX(-4deg);
+}
+
+/* Red Action Screen with Comic Sunburst / Speedlines */
+.manga-red-panel {
+  background: 
+    repeating-conic-gradient(from 0deg at 70% 40%, rgba(0, 0, 0, 0.22) 0deg 8deg, transparent 8deg 16deg),
+    radial-gradient(circle at 65% 45%, #ff2a34 0%, #d8000c 60%, #7e0005 100%);
+}
+
+/* Caution Hazard Stripes */
+.hazard-pattern {
+  background: repeating-linear-gradient(
+    -45deg,
+    #ffe500,
+    #ffe500 14px,
+    #050505 14px,
+    #050505 28px
+  );
+}
+
+/* Starburst Spiky Comic Explosions */
+.burst-shape {
+  clip-path: polygon(
+    50% 0%, 64% 17%, 82% 5%, 83% 25%, 100% 25%, 91% 43%, 100% 60%, 86% 70%, 93% 89%, 73% 86%, 
+    63% 100%, 48% 88%, 33% 99%, 28% 84%, 8% 90%, 15% 70%, 0% 60%, 10% 42%, 0% 25%, 20% 25%, 
+    18% 5%, 38% 18%
+  );
+}
+
+.burst-badge-sm {
+  clip-path: polygon(
+    50% 0%, 65% 15%, 85% 8%, 85% 30%, 100% 45%, 88% 65%, 95% 88%, 70% 85%, 
+    50% 100%, 30% 85%, 5% 88%, 12% 65%, 0% 45%, 15% 30%, 15% 8%, 35% 15%
+  );
+}
+
+/* Comic Speech Bubble Pointer */
+.speech-tail {
+  clip-path: polygon(0 0, 100% 0, 30% 100%);
+}
+
+/* Animated Comic Elements */
+@keyframes comic-bounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-4px) scale(1.02); }
+}
+
+@keyframes comic-pulse-fast {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+@keyframes comic-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px) rotate(-1deg); }
+  40% { transform: translateX(4px) rotate(1deg); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+@keyframes tile-crack-anim {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(0.96) rotate(-2deg); }
+  75% { transform: scale(0.96) rotate(2deg); }
+}
+
+@keyframes tile-collapse-anim {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(120%) scale(0.2) rotate(35deg); opacity: 0; }
+}
+
+@keyframes smoke-float {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.04) translateY(-3px); }
+}
+
+@keyframes nen-aura {
+  0%, 100% { filter: drop-shadow(0 0 6px #ffe500) drop-shadow(0 0 14px rgba(255, 229, 0, 0.7)); }
+  50% { filter: drop-shadow(0 0 10px #ff2a34) drop-shadow(0 0 20px rgba(255, 42, 52, 0.9)); }
+}
+
+.anim-bounce {
+  animation: comic-bounce 1.5s ease-in-out infinite;
+}
+
+.anim-pulse {
+  animation: comic-pulse-fast 1s ease-in-out infinite;
+}
+
+.anim-shake {
+  animation: comic-shake 0.25s ease-in-out;
+}
+
+.anim-smoke {
+  animation: smoke-float 2.2s ease-in-out infinite;
+}
+
+.anim-nen {
+  animation: nen-aura 1.8s ease-in-out infinite;
+}
+
+.tile-cracking {
+  animation: tile-crack-anim 0.15s linear infinite;
+  background-color: #ff3344 !important;
+  border-color: #000 !important;
+}
+
+.tile-collapsed {
+  animation: tile-collapse-anim 0.55s cubic-bezier(0.5, 0, 0.7, 0.4) forwards;
+}
+
+/* Halftone Dot Overlay for Manga Panels */
+.halftone-overlay {
+  background-image: radial-gradient(#000 1.5px, transparent 1.6px);
+  background-size: 8px 8px;
+  opacity: 0.18;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #001f5c;
+}
+::-webkit-scrollbar-thumb {
+  background: #ffe500;
+  border: 1px solid #000;
 }
